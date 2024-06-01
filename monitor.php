@@ -55,7 +55,38 @@
             <img src="imagenes/TutorSpaceimg.png" width="140" height="110" class="rounded mx-auto d-block" ALIGN=LEFT>
         </div>
         <div class="registro-title text-center">
-            <h1>Bienvenido monitor</h1>
+            <h1>Bienvenido </h1>
+
+            <label type="materias" class="form-label" for="materias">Selecciona una materia de la cual deseas dar clase</label>
+            <select name="materias" id="materias" class="form-control">
+                <option value="selecciona">Selecciona una materia</option>
+                <?php
+                // Conexión a la base de datos
+                $conexion = pg_connect("host=localhost dbname=tutorspace user=postgres password=1234");
+
+                // Comprobar conexión
+                if (!$conexion) {
+                    echo "Failed to connect to PostgreSQL: " . pg_last_error();
+                    exit;
+                }
+
+                // Consulta para obtener las materias de la base de datos
+                $consulta = "SELECT * FROM materias";
+                $resultado = pg_query($conexion, $consulta);
+
+                // Iterar sobre los resultados y crear opciones para el select
+                while ($fila = pg_fetch_assoc($resultado)) {
+                    echo "<option value='" . $fila['id_materia'] . "'>" . $fila['materia'] . "</option>";
+                }
+
+                // Liberar resultado
+                pg_free_result($resultado);
+
+                // Cerrar conexión
+                pg_close($conexion);
+                ?>
+            </select>
+
         </div>
       </div>
     </div>
