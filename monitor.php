@@ -58,6 +58,7 @@
             <h1>Bienvenido </h1>
 
             <label type="materias" class="form-label" for="materias">Selecciona una materia de la cual deseas dar clase</label>
+            <div><br></div>
             <select name="materias" id="materias" class="form-control">
                 <option value="selecciona">Selecciona una materia</option>
                 <?php
@@ -86,6 +87,10 @@
                 pg_close($conexion);
                 ?>
             </select>
+
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary btn-login w-100">Iniciar Sesión</button>
+            </div>
 
         </div>
       </div>
