@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - TutorSpace</title>
+
+  <script src="libs/jquery.js"></script>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <script src="libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+  <link rel="stylesheet" href="libs/bootstrap-datepicker/css/bootstrap-datepicker.css">
+
+  <style>
+    .bg {
+      background-color: beige;
+      background-position: center center;
+      background-size: cover;
+      height: 150vh;
+    }
+    .registro-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    .registro-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .registro-form {
+      margin-top: 20px;
+    }
+    .form-control {
+      font-size: 14px;
+    }
+    .btn-register {
+      font-size: 16px;
+      padding: 12px;
+    }
+    .link-login {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col bg">
+        <div class="container h-100">
+          <div class="row align-items-center h-100">
+            <div class="col-md-6 offset-md-3">
+              <div class="registro-container">
+                <div class="text-end">
+                  <img src="imagenes/TutorSpaceimg.png" width="250" height="210" class="rounded mx-auto d-block">
+                </div>
+
+                <h2 class="registro-title text-center py-4">Regístrate</h2>
+
+                <!-- REGISTRO -->
+                <form class="registro-form" action="Conexion.php" method="post">
+                  <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="college" class="form-label">Institucion Educativa</label>
+                    <input type="college" class="form-control" id="college" name="college" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="college" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="fecha_nac" name="fecha_nac" required>
+                  </div>
+                  <div class="mb-3">
+                    <label type="cargo" class="form-label" for="cargo">Cargo</label>
+                    <select name="cargo" id="lang" class="form-control">
+                      <option value="selecciona">Selecciona un cargo</option>
+                      <option value="estudiante">Estudiante</option>
+                      <option value="monitor">Monitor</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-register w-100" onclick="window.location.href='LoginProyectoExtraClase.html'">Registrarse</button>
+                  
+                  <div class="my-3 text-center">
+                    <span class="link-login">¿Ya tienes cuenta? <a href="LoginProyectoExtraClase.html">Inicia Sesión</a></span>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Bootstrap JS y dependencias de jQuery y Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>  
+</html>
