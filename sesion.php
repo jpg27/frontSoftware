@@ -16,7 +16,7 @@ $contraseña = $_POST['password'];
 $query_estudiantes = "SELECT 'estudiante' as cargo, nombre FROM estudiantes WHERE correo='$correo' AND contraseña='$contraseña'";
 
 // Consulta en la tabla tutores
-$query_tutores = "SELECT 'tutor' as cargo, nombre FROM tutores WHERE correo='$correo' AND contraseña='$contraseña'";
+$query_tutores = "SELECT 'monitor' as cargo, nombre FROM tutores WHERE correo='$correo' AND contraseña='$contraseña'";
 
 // Unimos ambas consultas
 $query = "($query_estudiantes) UNION ($query_tutores)";
@@ -32,7 +32,7 @@ if($cantidad > 0){
     
     if($fila['cargo'] == 'estudiante'){
         header('Location: estudiante.php'); // Cambia a estudiante.php
-    } elseif($fila['cargo'] == 'tutor') {
+    } elseif($fila['cargo'] == 'monitor') {
         header('Location: monitor.php'); // Cambia a la página del tutor
     } else {
         header('Location: loginProyectoExtraClase.html');

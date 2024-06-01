@@ -1,3 +1,19 @@
+<?php
+session_start();
+if (!isset($_SESSION['cargo']) || $_SESSION['cargo'] != 'monitor') {
+    header('Location: loginProyectoExtraClase.html');
+    exit();
+}
+
+if (!isset($_SESSION['nombre'])) {
+    echo "Error: La sesión no tiene un nombre definido.";
+    exit();
+}
+
+$nombre = $_SESSION['nombre'];
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -55,7 +71,7 @@
             <img src="imagenes/TutorSpaceimg.png" width="140" height="110" class="rounded mx-auto d-block" ALIGN=LEFT>
         </div>
         <div class="registro-title text-center">
-            <h1>Bienvenido </h1>
+          <h1>Bienvenido Tutor <?php echo htmlspecialchars($nombre); ?> a tutorspace</h1>
 
             <label type="materias" class="form-label" for="materias">Selecciona una materia de la cual deseas dar clase</label>
             <div><br></div>
