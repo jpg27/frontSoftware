@@ -39,7 +39,12 @@ if($cantidad > 0){
     }
     exit();
 } else {
-    echo "Datos incorrectos";
+    echo "<script>
+    alert('Datos incorrectos');
+    window.location = 'LoginProyectoExtraClase.html';
+    </script>";
+
+
 }
 
 pg_close($conexion);

@@ -12,8 +12,47 @@ if (!isset($_SESSION['nombre'])) {
 
 $nombre = $_SESSION['nombre'];
 
-?>
+// Conexión a la base de datos
+$conexion = pg_connect("host=localhost dbname=tutorspace user=postgres password=1234");
 
+// Comprobar conexión
+if (!$conexion) {
+    echo "Failed to connect to PostgreSQL: " . pg_last_error();
+    exit;
+}
+
+// Obtener el ID del estudiante
+$consulta_estudiante = "SELECT id_estudiante FROM estudiantes WHERE nombre = '$nombre'";
+$resultado_estudiante = pg_query($conexion, $consulta_estudiante);
+
+// Manejo de errores
+if (!$resultado_estudiante) {
+    echo "Error en la consulta de obtener el ID del estudiante: " . pg_last_error($conexion);
+    exit;
+}
+
+// Obtener el ID del estudiante
+$registro_estudiante = pg_fetch_assoc($resultado_estudiante);
+$id_estudiante = $registro_estudiante['id_estudiante'];
+
+// Verificar si se envió el formulario
+if (isset($_POST['seleccionar_materia'])) {
+    $id_materia = $_POST['materias'];
+    $fecha_materia = $_POST['fecha_materia'];
+
+    // Consulta para insertar la cita en la tabla "citas"
+    $consulta_cita = "INSERT INTO citas (id_estudiante, id_materia, fecha_cita) VALUES ('$id_estudiante', '$id_materia', '$fecha_materia')";
+    $resultado_cita = pg_query($conexion, $consulta_cita);
+
+    // Manejo de errores
+    if (!$resultado_cita) {
+        echo "Error al insertar la cita: " . pg_last_error($conexion);
+        exit;
+    } else {
+        echo "Cita registrada exitosamente.";
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -72,48 +111,82 @@ $nombre = $_SESSION['nombre'];
             <img src="imagenes/TutorSpaceimg.png" width="140" height="110" class="rounded mx-auto d-block" ALIGN=LEFT>
         </div>
         <div class="registro-title text-center">
-          <h1>Bienvenido <?php echo htmlspecialchars($nombre); ?> a tutorspace</h1>
+          <h1>Bienvenido <?php echo htmlspecialchars($nombre); ?> a TutorSpace</h1>
 
             <div><br></div>
             <label type="materias" class="form-label" for="materias">Selecciona una materia de la cual deseas un tutor o clase</label>
-            <select name="materias" id="materias" class="form-control">
-                <option value="selecciona">Selecciona una materia</option>
-                <?php
-                // Conexión a la base de datos
-                $conexion = pg_connect("host=localhost dbname=tutorspace user=postgres password=1234");
+            <form action="" method="post">
+                <select name="materias" id="materias" class="form-control">
+                    <option value="selecciona">Seleccionar una materia</option>
+                    <?php
+                    // Consulta para obtener las materias de la base de datos
+                    $consulta = "SELECT * FROM materias";
+                    $resultado = pg_query($conexion, $consulta);
 
-                // Comprobar conexión
-                if (!$conexion) {
-                    echo "Failed to connect to PostgreSQL: " . pg_last_error();
-                    exit;
-                }
+                    // Iterar sobre los resultados y crear opciones para el select
+                    while ($fila = pg_fetch_assoc($resultado)) {
+                        echo "<option value='" . $fila['id_materia'] . "'>" . $fila['materia'] . "</option>";
+                    }
 
-                // Consulta para obtener las materias de la base de datos
-                $consulta = "SELECT * FROM materias";
-                $resultado = pg_query($conexion, $consulta);
+                    // Liberar resultado
+                    pg_free_result($resultado);
+                    ?>
+                </select>
 
-                // Iterar sobre los resultados y crear opciones para el select
-                while ($fila = pg_fetch_assoc($resultado)) {
-                    echo "<option value='" . $fila['id_materia'] . "'>" . $fila['materia'] . "</option>";
-                }
+                <div class="mb-3">
+                  <label for="fecha_materia" class="form-label" ALIGN=CENTER>Ingresa la fecha en la cual deseas ver la materia</label>
+                  <input type="date" class="form-control" id="fecha_materia" name="fecha_materia" required>
+                </div>
 
-                // Liberar resultado
-                pg_free_result($resultado);
-
-                // Cerrar conexión
-                pg_close($conexion);
-                ?>
-            </select>
-
-            <div class="mb-3">
-              <label for="fecha_materia" class="form-label" ALIGN=CENTER>Ingresa la fecha en la cual deseas ver la materia</label>
-              <input type="date" class="form-control" id="fecha_materia" name="fecha_materia" required>
-            </div>
-
-
+                <div class="mb-3">
+                   <button type="submit" name="seleccionar_materia" class="btn btn-primary btn-login w-100">Registrar cita</button>
+                </div>
+            </form>
         </div>
+
+          <!-- Mostrar lista de materias, monitores y fechas -->
+  <div class="container">
+    <h2>Lista de tus proximas clases de monitoria!!</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Materia</th>
+          <th>Monitor</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        // Consulta para obtener los datos de la tabla tutores_materias
+        $consulta_tutores_materias = "SELECT m.materia, t.nombre, c.fecha_cita
+                                      FROM tutores_materias tm
+                                      JOIN materias m ON tm.id_materia = m.id_materia
+                                      JOIN tutores t ON tm.id_tutor = t.id_tutor
+                                      JOIN citas c ON tm.id_materia = c.id_materia";
+        $resultado_tutores_materias = pg_query($conexion, $consulta_tutores_materias);
+
+        // Iterar sobre los resultados y mostrar la información en la tabla
+        while ($fila = pg_fetch_assoc($resultado_tutores_materias)) {
+            echo "<tr>
+                    <td>" . $fila['materia'] . "</td>
+                    <td>" . $fila['nombre'] . "</td>
+                    <td>" . $fila['fecha_cita'] . "</td>
+                  </tr>";
+        }
+
+        // Liberar resultado
+        pg_free_result($resultado_tutores_materias);
+        ?>
+      </tbody>
+    </table>
+    <div><br></div>
+
+    <button type="submit" class="btn btn-danger btn-register w-100" onclick="window.location.href='LoginProyectoExtraClase.html'">SALIR</button>
       </div>
     </div>
+  </div>
+
+
   </div>
 
 <!-- Bootstrap JS y dependencias de jQuery y Popper.js -->
@@ -121,6 +194,9 @@ $nombre = $_SESSION['nombre'];
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-</body>  
+<?php
+// Cerrar conexión
+pg_close($conexion);
+?>
+</body>
 </html>
-
